@@ -11,4 +11,4 @@ The main MVPA exposure was derived from UKB derived accelerometry fields courtes
 Script 'main.R' contains the main analyses
 All UKB data utilized are available by application (https://www.ukbiobank.ac.uk/enable-your-research/register)
 Questions
-Contact Weiye Lu (luweiye77777@163.com)
+Contact WinsenLu (luweiye77777@163.com)
