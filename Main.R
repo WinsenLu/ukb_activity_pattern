@@ -171,4 +171,28 @@ cox_model <- coxph(Surv(time, status) ~ Activity_Type + Age + Sex +
                      Townsend_deprivation_index + Smoking_status +
                      Vitamin_D + BMI + Race + Diet_quality,
                    data = dat)
+
 summary(cox_model)
+
+# 4. Proportional hazard hypothesis testing
+ph_check <- cox.zph(cox_model)
+print(ph_check)           
+plot(ph_check)           
+
+## 4.1. Proportional hazard test
+ph_check <- cox.zph(cox_model)
+
+## 4.2. Drawing: One for each non-reference level
+cn <- colnames(ph_check$y)
+lev_plot <- cn[grepl("Activity_Type", cn)]   
+par(mfrow = c(1, length(lev_plot)))          
+for(col in lev_plot){
+  t  <- ph_check$time
+  rs <- ph_check$y[, col]
+  plot(t, rs, xlab = "Event time",
+       ylab = "Schoenfeld residual",
+       main  = col, col = "steelblue", pch = 19)
+  lines(lowess(t, rs), col = "red", lwd = 2)
+  abline(h = 0, lty = 2)
+}
+par(mfrow = c(1,1))
