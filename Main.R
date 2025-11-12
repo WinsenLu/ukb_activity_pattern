@@ -125,6 +125,44 @@ df_final <- df_scored %>%
     )
   )
 
+## 2.5 Define activity pattern
+# 2.5.1. Wearing time in minutes (Columns 6-12)
+wear_cols <- 6:12
+df_final[wear_cols] <- df_final[wear_cols] * 60
+
+# 2.5.2. Split Moderate_Vigorous_Day_average (column 5) into a 7-day matrix
+mv_matrix <- df_final %>%
+  pull(`Moderate_Vigorous_Day_average`) %>%
+  strsplit(",") %>%
+  lapply(function(x) as.numeric(trimws(x))) %>%
+  do.call(rbind, .)   
+colnames(mv_matrix) <- paste0("MV_", c("Mon","Tue","Wed","Thu","Fri","Sat","Sun"))
+
+# 3. Calculate the number of MVPA minutes per day
+mv_minutes <- mv_matrix * as.matrix(df_final[wear_cols])
+
+# 4. Weekly total and maximum two-day total
+total_mv  <- rowSums(mv_minutes, na.rm = TRUE)
+top2_mv   <- apply(mv_minutes, 1, function(x){
+  sum(tail(sort(x, na.last = NA), 2), na.rm = TRUE)
+})
+
+df_final <- df_final %>%
+  mutate(
+    Total_MV_Minutes      = total_mv,
+    Top2_Days_MV_Minutes  = top2_mv
+  )
+
+# 6. Three classifications of movement patterns: 112.1(25%), 150(guidelines), 226.6(50%), and 388.8(75%)
+df_final <- df_final %>%
+  mutate(
+    Activity_Type = case_when(
+      Total_MV_Minutes < 388.8                    ~ "Inactive",
+      Top2_Days_MV_Minutes / Total_MV_Minutes >= 0.5 ~ "Active WW",
+      TRUE                                       ~ "Active regular"
+    )
+  )
+
 ########################################################
 # Part 3. Survival analysis/Cox model
 ########################################################
@@ -196,4 +234,5 @@ for(col in lev_plot){
   abline(h = 0, lty = 2)
 }
 par(mfrow = c(1,1))
+
 
