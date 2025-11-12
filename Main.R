@@ -54,7 +54,7 @@ cat("Remove NA in BMI :", original_count - nrow(ms_clean),
 # Part 2. Covariate preprocessing
 ########################################################
 ## 2.1 Read in the data after quality control
-df0 <- ms_clean    # 直接复用上一阶段结果
+df0 <- ms_clean    
 
 ## 2.2 The four classifications of races
 df0 <- df0 %>%
@@ -196,3 +196,4 @@ for(col in lev_plot){
   abline(h = 0, lty = 2)
 }
 par(mfrow = c(1,1))
+
