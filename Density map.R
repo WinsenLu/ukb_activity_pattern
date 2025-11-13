@@ -24,8 +24,8 @@ p_final <- ggplot(df_long, aes(x = MVPA_min, fill = Group)) +
   
   scale_fill_manual(values = c("Top2_Days_MV_Minutes" = "#E41A1C",
                                "Remaining_5_d"        = "#377EB8"),
-                    labels = c("Top-2 days",
-                               "Remaining 5 days")) +
+                    labels = c("Top2_Days_MV_Minutes" = "Top-2 days",
+                               "Remaining_5_d" = "Remaining 5 days")) +
   
   guides(fill = guide_legend(title = NULL)) +
   
@@ -37,5 +37,6 @@ p_final <- ggplot(df_long, aes(x = MVPA_min, fill = Group)) +
     axis.line.y       = element_line(colour = "black"),  
     legend.position   = "top"
   )
+
 
 print(p_final)
